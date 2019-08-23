@@ -1,5 +1,5 @@
-Location Recovery
-=================
+Location Recovery Module Contracts
+==================================
 
 This repository contains a recovery mechanism that uses locations (foam points of interests) for recovery that can be used with the [Gnosis Safe contracts](https://github.com/gnosis/safe-contracts)
 
