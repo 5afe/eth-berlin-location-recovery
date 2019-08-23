@@ -3,6 +3,7 @@ import WalletConnect from "@walletconnect/browser";
 import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 
@@ -42,15 +43,17 @@ walletConnector.on("disconnect", (error, payload) => {
 });
 
 function showModal() {
-    // create new session
+    if (!walletConnector.connected) {
+        // create new session
         walletConnector.createSession().then(() => {
-        // get uri for QR Code modal
-        const uri = walletConnector.uri;
-        // display QR Code modal
-        WalletConnectQRCodeModal.open(uri, () => {
-            console.log("QR Code Modal closed");
+            // get uri for QR Code modal
+            const uri = walletConnector.uri;
+            // display QR Code modal
+            WalletConnectQRCodeModal.open(uri, () => {
+                console.log("QR Code Modal closed");
+            });
         });
-        });
+    }
 }
 
 
@@ -78,6 +81,18 @@ function Enable() {
                         foam.space
                     </Link>
                 </Card.Subtitle>
+                <Card.Text>
+                <Form>
+                    <Form.Group controlId="searchPOIs">
+                        <Form.Label>Search term</Form.Label>
+                        <Form.Control type="text" placeholder="Enter search term" />
+
+                        <Button variant="primary" type="submit">
+                        Submit
+                        </Button>
+                    </Form.Group>
+                    </Form>
+                </Card.Text>
             </Card.Body>
         </Card>
     );
