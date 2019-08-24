@@ -10,7 +10,7 @@ import {
 
 function App() {
   return (
-    <Router>        
+    <Router basename={process.env.PUBLIC_URL}>        
       <Route exact path={HOME_URL} component={Home} /> 
       <Route path={RECOVER_URL} component={Recover}/>
     </Router>
