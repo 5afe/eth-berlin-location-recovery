@@ -31,3 +31,15 @@
     transform: rotate(360deg);
   }
 }
+
+.left {
+  background-color: white;
+  color: #3d8973;
+  text-align: center”;
+}
+
+.right {
+  background-color: #3d8973;
+  color: white;
+  text-align: center”;
+}

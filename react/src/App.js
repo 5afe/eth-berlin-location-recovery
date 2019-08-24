@@ -3,25 +3,16 @@ import React from 'react';
 import './App.css';
 import Container from "react-bootstrap/Container";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Row from 'react-bootstrap/Row';
-import Header from './Header'
+import SetupHome from './setup/Home'
+import RecoverHome from './recover/Home'
 import Home from './Home'
-import Recover from './Recover'
-import Enable from './Enable'
 
 function App() {
   return (
     <Router>        
-      <Container fluid={true}>         
-        <Row>            
-          <Header/>         
-        </Row>         
-        <Row>           
-          <Route exact path="/" component={Home}/>   
-          <Route path="/enable" component={Enable}/>     
-          <Route path="/recover" component={Recover}/>     
-        </Row>       
-      </Container>      
+      <Route exact path="/" component={Home} /> 
+      <Route path="/setup" component={SetupHome}/>     
+      <Route path="/recover/:address" component={RecoverHome}/>      
     </Router>
   );
 }
