@@ -6,15 +6,15 @@ import "@gnosis.pm/safe-contracts/contracts/base/Module.sol";
 import "@gnosis.pm/safe-contracts/contracts/common/Enum.sol";
 import "./external/SafeMath.sol";
 
-contract KeccakRecoveryModule is Module {
+contract SimpleRecoveryModule is Module {
 
     using SafeMath for uint256;
 
-    string public constant NAME = "Keccak Recovery Module";
+    string public constant NAME = "Simple Recovery Module";
     string public constant VERSION = "1.0.0";
 
-    // Hash that needs to be generated to trigger recovery
-    bytes32 public recoveryHash;
+    // Address that can trigger the recovery
+    address public recoverer;
     // Recovery duration in seconds
     uint256 public recoveryDurationS;
     // Time when recovery was triggerd
@@ -22,49 +22,48 @@ contract KeccakRecoveryModule is Module {
     // Owners that should be added for recovery;
     address[] public recoveryOwners;
 
+    uint256 public nonce;
+
     /// @dev Setup function sets initial storage of contract.
-    function setup(bytes32 _recoveryHash, uint256 _recoveryDurationS)
+    function setup(address _recoverer, uint256 _recoveryDurationS)
         public
     {
         setManager();
-        require(_recoveryHash != 0, "Invalid recovery hash provided");
-        recoveryHash = _recoveryHash;
+        require(_recoverer != address(0), "Invalid recoverer provided");
+        recoverer = _recoverer;
         recoveryDurationS = _recoveryDurationS;
     }
 
-    function triggerRecovery(bytes memory _recoveryData, address[] memory _recoveryOwners) public {
-        require(recoveryHash != 0, "Module was already used!");
+    function triggerRecovery(bytes32 r, bytes32 s, uint8 v, address[] memory _recoveryOwners) public {
+        require(recoverer != address(0), "Module was already used!");
         require(recoveryStartTime == 0, "Recovery was already started!");
         require(_recoveryOwners.length > 0, "New owners are required!");
-        require(keccak256(_recoveryData) == recoveryHash, "Wrong recovery data provided!");
+        require(recoverer == ecrecover(keccak256(abi.encodePacked(byte(0x19), byte(0x00), _recoveryOwners, nonce)), v, r, s), "Invalid signature provided!");
+        nonce = nonce + 1;
         recoveryStartTime = now;
         recoveryOwners = _recoveryOwners;
     }
 
     /// @dev Setup function sets initial storage of contract.
-    /// @param prevModule Previous module to disable this module after successfull recovery
-    function executeRecovery(address prevModule) public {
-        require(recoveryHash != 0, "Module was already used!");
+    function executeRecovery() public {
+        require(recoverer != address(0), "Module was already used!");
         require(recoveryStartTime > 0, "Recovery was not triggered yet!");
         require(now >= recoveryStartTime.add(recoveryDurationS), "Recovery cannot be executed yet!");
-        recoveryHash = 0;
+        recoverer = address(0);
         for (uint256 i = 0; i < recoveryOwners.length; i++) {
             bytes memory addOwnerData = abi.encodeWithSignature("addOwnerWithThreshold(address,uint256)", recoveryOwners[i], recoveryOwners.length);
             require(manager.execTransactionFromModule(address(manager), 0, addOwnerData, Enum.Operation.Call), "Could not execute recovery!");
         }
-        // This recovery module can only be used and should be disabled when the recovery was successfull
-        bytes memory disableModuleData = abi.encodeWithSignature("disableModule(address,address)", prevModule, address(this));
-        require(manager.execTransactionFromModule(address(manager), 0, disableModuleData, Enum.Operation.Call), "Could not disable module!");
     }
 
-    function triggerAndExecuteRecoveryWithoutDelay(bytes memory _recoveryData, address[] memory _recoveryOwners, address prevModule) public {
+    function triggerAndExecuteRecoveryWithoutDelay(bytes32 r, bytes32 s, uint8 v, address[] memory _recoveryOwners) public {
         require(recoveryDurationS == 0, "This method can only be used if not delay was defined!");
-        triggerRecovery(_recoveryData, _recoveryOwners);
-        executeRecovery(prevModule);
+        triggerRecovery(r, s, v, _recoveryOwners);
+        executeRecovery();
     }
 
     function cancelRecovery() public authorized {
-        require(recoveryHash != 0, "Module was already used!");
+        require(recoverer != address(0), "Module was already used!");
         require(recoveryStartTime > 0, "Recovery was not triggered yet!");
         recoveryStartTime = 0;
         delete recoveryOwners;
