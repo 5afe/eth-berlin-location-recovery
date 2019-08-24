@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <View
+        android:id="@+id/item_asset_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/item_asset_img"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/item_asset_container"
+        app:layout_constraintStart_toStartOf="@+id/item_asset_container"
+        app:layout_constraintTop_toTopOf="@+id/item_asset_container" />
+
+    <TextView
+        android:id="@+id/item_asset_name_lbl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/item_asset_contract_lbl"
+        app:layout_constraintEnd_toEndOf="@+id/item_asset_container"
+        app:layout_constraintStart_toEndOf="@+id/item_asset_img"
+        app:layout_constraintTop_toTopOf="@+id/item_asset_container"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="devops199" />
+
+    <TextView
+        android:id="@+id/item_asset_contract_lbl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="sans-serif"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/item_asset_container"
+        app:layout_constraintEnd_toEndOf="@+id/item_asset_container"
+        app:layout_constraintStart_toStartOf="@+id/item_asset_name_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/item_asset_name_lbl"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="0x034992...394942" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

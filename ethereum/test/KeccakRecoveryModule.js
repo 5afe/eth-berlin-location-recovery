@@ -93,4 +93,43 @@ contract('KeccakRecoveryModule', function(accounts) {
             'triggerRecovery cannot be used again'
         )
     })
+
+    it('execute recovery without delay with combined function', async () => {
+        let hashData = "some random data for now"
+        
+        await deployRecoveryModule(web3.sha3(hashData), 0)
+
+        let modules = await gnosisSafe.getModules()
+        let recoveryModule = KeccakRecoveryModule.at(modules[0])
+        assert.equal(await recoveryModule.manager.call(), gnosisSafe.address)
+
+        let owners = await gnosisSafe.getOwners()
+        await recoveryModule.triggerAndExecuteRecoveryWithoutDelay(hashData, [lw.accounts[4], lw.accounts[5]], await gnosisSafe.SENTINEL_MODULES.call())
+        assert.ok(await recoveryModule.recoveryStartTime.call() > 0)
+        assert.equal(await recoveryModule.recoveryOwners.call(0), lw.accounts[4])
+        assert.equal(await recoveryModule.recoveryOwners.call(1), lw.accounts[5])
+        assert.equal(await gnosisSafe.getThreshold(), 2)
+        owners.unshift(lw.accounts[5], lw.accounts[4])
+        assert.deepEqual(await gnosisSafe.getOwners(), owners)
+
+        utils.assertRejects(
+            recoveryModule.triggerRecovery(hashData, [lw.accounts[4], lw.accounts[5]]),
+            'triggerRecovery cannot be used again'
+        )
+    })
+
+    it('cannot execute recovery with combined function when delay is set', async () => {
+        let hashData = "some random data for now"
+        
+        await deployRecoveryModule(web3.sha3(hashData), 3600)
+
+        let modules = await gnosisSafe.getModules()
+        let recoveryModule = KeccakRecoveryModule.at(modules[0])
+        assert.equal(await recoveryModule.manager.call(), gnosisSafe.address)
+
+        utils.assertRejects(
+            recoveryModule.triggerAndExecuteRecoveryWithoutDelay(hashData, [lw.accounts[4], lw.accounts[5]], await gnosisSafe.SENTINEL_MODULES.call()),
+            'triggerAndExecuteRecoveryWithoutDelay cannot be used with delay'
+        )
+    })
 });

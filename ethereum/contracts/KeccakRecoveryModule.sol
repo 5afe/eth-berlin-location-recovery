@@ -59,6 +59,12 @@ contract KeccakRecoveryModule is Module {
         require(manager.execTransactionFromModule(address(manager), 0, disableModuleData, Enum.Operation.Call), "Could not disable module!");
     }
 
+    function triggerAndExecuteRecoveryWithoutDelay(bytes memory _recoveryData, address[] memory _recoveryOwners, address prevModule) public {
+        require(recoveryDurationS == 0, "This method can only be used if not delay was defined!");
+        triggerRecovery(_recoveryData, _recoveryOwners);
+        executeRecovery(prevModule);
+    }
+
     function cancelRecovery() public authorized {
         require(recoveryHash != 0, "Module was already used!");
         require(recoveryStartTime > 0, "Recovery was not triggered yet!");

@@ -1,7 +1,7 @@
 const truffleConfig = require('@gnosis.pm/util-contracts/src/util/truffleConfig')
 
 const DEFAULT_GAS_PRICE_GWEI = 5
-const DEFAULT_GAS_LIMIT = 7000000
+const DEFAULT_GAS_LIMIT = 6000000
 const DEFAULT_MNEMONIC = 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
 
 // Load env vars
