@@ -41,7 +41,6 @@ contract('SimpleRecoveryModule', function(accounts) {
     let deployRecoveryModule = async function(recoveryData, delay) {
         let privateKey = ethUtil.sha3(recoveryData)
         let recoverer = ethUtil.privateToAddress(privateKey)
-        console.log("0x" + recoverer.toString("hex"))
         let moduleData = await moduleMasterCopy.contract.setup.getData("0x" + recoverer.toString("hex"), delay)
         let proxyFactoryData = await proxyFactory.contract.createProxy.getData(moduleMasterCopy.address, moduleData)
         let modulesCreationData = utils.createAndAddModulesData([proxyFactoryData])

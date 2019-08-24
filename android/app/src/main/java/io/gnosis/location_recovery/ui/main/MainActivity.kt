@@ -4,12 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.JsonPrimitive
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -18,8 +18,11 @@ import com.mapbox.mapboxsdk.plugins.annotation.CircleManager
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions
 import io.gnosis.location_recovery.R
 import io.gnosis.location_recovery.repositories.LocationRepository
+import io.gnosis.location_recovery.ui.recover.RecoveryDialog
+import kotlinx.android.synthetic.main.bottom_sheet_next.view.*
 import kotlinx.android.synthetic.main.screen_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,8 +40,8 @@ class MainActivity : AppCompatActivity() {
         screen_main_disconnect_btn.setOnClickListener {
             viewModel.performAction(MainViewModelContract.Action.DisconnectSession)
         }
-        screen_main_enable_location_recovery_btn.setOnClickListener {
-            viewModel.performAction(MainViewModelContract.Action.EnableLocationRecovery)
+        screen_main_enable_location_next_btn.setOnClickListener {
+            showNext()
         }
         viewModel.state.observe(this, Observer {
             screen_main_bottom_sheet.isVisible = it.sessionActive
@@ -66,6 +69,25 @@ class MainActivity : AppCompatActivity() {
         }
         screen_main_map_view.onCreate(savedInstanceState)
         setupMap()
+    }
+
+    private val nextDialog: BottomSheetDialog by lazy {
+        BottomSheetDialog(this).apply {
+            val dialogView = layoutInflater.inflate(R.layout.bottom_sheet_next, null)
+            dialogView.bottom_sheet_next_setup.setOnClickListener {
+                viewModel.performAction(MainViewModelContract.Action.EnableLocationRecovery)
+                hide()
+            }
+            dialogView.bottom_sheet_next_recover.setOnClickListener {
+                currentSelectedLocations?.let { RecoveryDialog.createInstance(it).show(supportFragmentManager, null) }
+                hide()
+            }
+            setContentView(dialogView)
+        }
+    }
+
+    private fun showNext() {
+        nextDialog.show()
     }
 
     private var manager: CircleManager? = null
@@ -118,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         locationMap?.values?.map {
             CircleOptions()
                 .withLatLng(LatLng(it.latitude, it.longitude))
-                .withCircleRadius(10f)
+                .withCircleRadius(20f)
                 .withCircleOpacity(0.5f)
                 .withCircleColor("#D81B60")
                 .withData(JsonPrimitive(it.id))
@@ -128,8 +150,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var currentSelectedLocations: List<LocationRepository.Location>? = null
+
     private fun updateSelectedLocations(selected: List<LocationRepository.Location>) {
-        screen_main_enable_location_recovery_btn.isVisible = selected.size >= MainViewModelContract.REQUIRED_LOCATIONS
+        currentSelectedLocations = selected
+        screen_main_enable_location_next_btn.isVisible = selected.size >= MainViewModelContract.REQUIRED_LOCATIONS
         screen_main_map_view_location_summary.text = getString(R.string.x_selected_locations, selected.size, MainViewModelContract.REQUIRED_LOCATIONS)
         setupLocationView(screen_main_map_view_location_1, selected.getOrNull(0))
         setupLocationView(screen_main_map_view_location_2, selected.getOrNull(1))

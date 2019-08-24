@@ -21,7 +21,7 @@ buildscript {
                 material_design           : '1.1.0-alpha09',
 
                 bivrost                   : 'v0.7.1',
-                svalinn                   : 'v0.8.1',
+                svalinn                   : 'v0.9.0',
 
                 picasso                   : '2.71828',
                 moshi                     : '1.8.0',

@@ -63,11 +63,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/screen_main_account_address_img" />
 
-        <TextView
+        <Button
             android:id="@+id/screen_main_connect_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Connect"
+            android:backgroundTint="@color/colorPrimary"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="Connect to a wallet"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -96,18 +100,19 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <Button
-            android:id="@+id/screen_main_enable_location_recovery_btn"
+            android:id="@+id/screen_main_enable_location_next_btn"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:paddingStart="16dp"
-            android:gravity="center"
-            android:textColor="@color/white"
             android:backgroundTint="@color/colorPrimary"
+            android:gravity="center"
+            android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:text="Setup"
+            android:text="Next"
+            android:textColor="@color/white"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/screen_main_map_view_location_summary"
@@ -117,10 +122,10 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textStyle="bold"
-            tools:text="You have some selected"
-            app:layout_constraintEnd_toStartOf="@+id/screen_main_enable_location_recovery_btn"
+            app:layout_constraintEnd_toStartOf="@+id/screen_main_enable_location_next_btn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="You have some selected" />
 
         <TextView
             android:id="@+id/screen_main_map_view_location_1"

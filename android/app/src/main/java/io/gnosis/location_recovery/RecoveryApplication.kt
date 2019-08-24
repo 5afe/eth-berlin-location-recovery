@@ -9,6 +9,8 @@ import io.gnosis.location_recovery.data.FoamApi
 import io.gnosis.location_recovery.repositories.*
 import io.gnosis.location_recovery.ui.main.MainViewModel
 import io.gnosis.location_recovery.ui.main.MainViewModelContract
+import io.gnosis.location_recovery.ui.recover.RecoveryViewModel
+import io.gnosis.location_recovery.ui.recover.RecoveryViewModelContract
 import okhttp3.OkHttpClient
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -17,6 +19,9 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.walletconnect.impls.FileWCSessionStore
 import org.walletconnect.impls.WCSessionStore
+import pm.gnosis.mnemonic.Bip39
+import pm.gnosis.mnemonic.Bip39Generator
+import pm.gnosis.mnemonic.android.AndroidWordListProvider
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
@@ -50,6 +55,8 @@ class RecoveryApplication : Application() {
         single<WCSessionStore> { FileWCSessionStore(File(cacheDir, "session_store.json").apply { createNewFile() }, get()) }
 
         single { BridgeServer(get()).apply { start() } }
+
+        single<Bip39> { Bip39Generator(AndroidWordListProvider(get())) }
     }
 
     private val repositoryModule = module {
@@ -59,6 +66,7 @@ class RecoveryApplication : Application() {
 
     private val viewModelModule = module {
         viewModel<MainViewModelContract> { MainViewModel(get(), get()) }
+        viewModel<RecoveryViewModelContract> { RecoveryViewModel(get(), get()) }
     }
 
     private val apiModule = module {
