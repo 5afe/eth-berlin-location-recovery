@@ -1,0 +1,85 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'bivrost'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "io.gnosis.location_recovery"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
+
+    implementation "com.google.android.material:material:${versions.material_design}"
+
+    implementation "androidx.appcompat:appcompat:${versions.androidx_app_compat}"
+    implementation "androidx.core:core-ktx:${versions.androidx_core_ktx}"
+    implementation "androidx.constraintlayout:constraintlayout:${versions.androidx_constraint_layout}"
+    implementation "androidx.recyclerview:recyclerview:$versions.androidx_recycler_view"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.androidx_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.androidx_lifecycle"
+
+    implementation "org.java-websocket:Java-WebSocket:1.4.0"
+
+    implementation 'com.github.WalletConnect:kotlin-walletconnect-lib:e399b68f8f'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.0'
+
+    implementation "com.github.gnosis.svalinn-kotlin:blockies:$versions.svalinn"
+    implementation "com.github.gnosis.svalinn-kotlin:crypto:$versions.svalinn"
+    implementation "com.github.gnosis.svalinn-kotlin:models:$versions.svalinn"
+    implementation "com.github.gnosis.svalinn-kotlin:utils:$versions.svalinn"
+
+    implementation "com.github.gnosis.bivrost-kotlin:bivrost-solidity-types:$versions.bivrost"
+
+    implementation 'com.github.drfonfon:android-geohash:0.22'
+
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation("com.squareup.retrofit2:converter-moshi:$versions.retrofit") {
+        exclude group: "com.squareup.moshi", module: "moshi"
+    }
+
+    implementation "com.squareup.picasso:picasso:$versions.picasso"
+
+    // Koin for Android
+    implementation "org.koin:koin-android:$versions.koin"
+    // Koin Android Scope features
+    implementation "org.koin:koin-android-scope:$versions.koin"
+    // Koin Android ViewModel features
+    implementation "org.koin:koin-android-viewmodel:$versions.koin"
+    // Koin Android Experimental features
+    implementation "org.koin:koin-android-ext:$versions.koin"
+
+    implementation "com.squareup.moshi:moshi:$versions.moshi"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
+
+    implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
+
+    implementation "com.github.komputing:KHex:0.6"
+
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.2.1'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v8:0.7.0'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}

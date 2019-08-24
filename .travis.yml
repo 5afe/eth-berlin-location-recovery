@@ -6,4 +6,5 @@ cache:
     - node_modules
 before_script: 
   - cd ethereum
+  - npm install
   - npx truffle compile
