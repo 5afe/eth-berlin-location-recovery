@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a711f0bd04bf59e0ae0e2f263363469a",
+    "revision": "c2c0bae8e7d6791d602483ae6ac4d5c0",
     "url": "/eth-berlin-location-recovery/index.html"
   },
   {
