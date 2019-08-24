@@ -1,0 +1,15 @@
+.page {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.left {
+  height: 100%;
+}
+
+.right {
+  background: #008c73;
+  height: 100%;
+}
