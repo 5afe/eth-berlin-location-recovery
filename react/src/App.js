@@ -1,18 +1,21 @@
 import React from 'react';
-// import logo from './logo.svg';
 import './App.css';
-import Container from "react-bootstrap/Container";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import SetupHome from './setup/Home'
-import RecoverHome from './recover/Home'
-import Home from './Home'
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Setup from './routes/setup'
+import Recover from './routes/recover'
+import Home from './routes/home'
+import {
+  HOME_URL,
+  SETUP_URL,
+  RECOVER_URL
+} from './routes/routes'
 
 function App() {
   return (
     <Router>        
-      <Route exact path="/" component={Home} /> 
-      <Route path="/setup" component={SetupHome}/>     
-      <Route path="/recover/:address" component={RecoverHome}/>      
+      <Route exact path={HOME_URL} component={Home} /> 
+      <Route path={SETUP_URL} component={Setup}/>     
+      <Route path={RECOVER_URL} component={Recover}/> {/* "/recover/:address" */}
     </Router>
   );
 }
