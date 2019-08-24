@@ -1,18 +1,16 @@
 {
   "files": {
-    "main.css": "/eth-berlin-location-recovery/static/css/main.25b2f1b8.chunk.css",
-    "main.js": "/eth-berlin-location-recovery/static/js/main.08d4aa09.chunk.js",
-    "main.js.map": "/eth-berlin-location-recovery/static/js/main.08d4aa09.chunk.js.map",
-    "runtime~main.js": "/eth-berlin-location-recovery/static/js/runtime~main.8040eb1a.js",
-    "runtime~main.js.map": "/eth-berlin-location-recovery/static/js/runtime~main.8040eb1a.js.map",
-    "static/css/2.266e55a5.chunk.css": "/eth-berlin-location-recovery/static/css/2.266e55a5.chunk.css",
-    "static/js/2.170860c2.chunk.js": "/eth-berlin-location-recovery/static/js/2.170860c2.chunk.js",
-    "static/js/2.170860c2.chunk.js.map": "/eth-berlin-location-recovery/static/js/2.170860c2.chunk.js.map",
+    "main.css": "/eth-berlin-location-recovery/static/css/main.2cce8147.chunk.css",
+    "main.js": "/eth-berlin-location-recovery/static/js/main.6cf797d4.chunk.js",
+    "main.js.map": "/eth-berlin-location-recovery/static/js/main.6cf797d4.chunk.js.map",
+    "runtime~main.js": "/eth-berlin-location-recovery/static/js/runtime~main.bdedd43e.js",
+    "runtime~main.js.map": "/eth-berlin-location-recovery/static/js/runtime~main.bdedd43e.js.map",
+    "static/js/2.7ac81533.chunk.js": "/eth-berlin-location-recovery/static/js/2.7ac81533.chunk.js",
+    "static/js/2.7ac81533.chunk.js.map": "/eth-berlin-location-recovery/static/js/2.7ac81533.chunk.js.map",
     "index.html": "/eth-berlin-location-recovery/index.html",
-    "precache-manifest.ede81c0e650a94c5cd53197371d91df3.js": "/eth-berlin-location-recovery/precache-manifest.ede81c0e650a94c5cd53197371d91df3.js",
+    "precache-manifest.63681b837d82fd6f43ec43e7adbfc6e3.js": "/eth-berlin-location-recovery/precache-manifest.63681b837d82fd6f43ec43e7adbfc6e3.js",
     "service-worker.js": "/eth-berlin-location-recovery/service-worker.js",
-    "static/css/2.266e55a5.chunk.css.map": "/eth-berlin-location-recovery/static/css/2.266e55a5.chunk.css.map",
-    "static/css/main.25b2f1b8.chunk.css.map": "/eth-berlin-location-recovery/static/css/main.25b2f1b8.chunk.css.map",
-    "static/media/logo.png": "/eth-berlin-location-recovery/static/media/logo.929c79fd.png"
+    "static/css/main.2cce8147.chunk.css.map": "/eth-berlin-location-recovery/static/css/main.2cce8147.chunk.css.map",
+    "static/media/logo.svg": "/eth-berlin-location-recovery/static/media/logo.5d5d9eef.svg"
   }
 }
