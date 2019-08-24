@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "5b7cb1a3f83a183a7ed17c0b926d55a3",
+    "revision": "eb32519381b667741f5f1275d7d107ba",
     "url": "/eth-berlin-location-recovery/index.html"
   },
   {
-    "revision": "59b71efaf37c622bd4a6",
+    "revision": "00d6ca0a25bb3cf3c852",
     "url": "/eth-berlin-location-recovery/static/css/2.266e55a5.chunk.css"
   },
   {
-    "revision": "952e2549dc4cbbbc8e4a",
-    "url": "/eth-berlin-location-recovery/static/css/main.25b2f1b8.chunk.css"
+    "revision": "8f4af8fa8dc301bb71a7",
+    "url": "/eth-berlin-location-recovery/static/css/main.3ea121e8.chunk.css"
   },
   {
-    "revision": "59b71efaf37c622bd4a6",
-    "url": "/eth-berlin-location-recovery/static/js/2.58577ef1.chunk.js"
+    "revision": "00d6ca0a25bb3cf3c852",
+    "url": "/eth-berlin-location-recovery/static/js/2.22b4ce81.chunk.js"
   },
   {
-    "revision": "952e2549dc4cbbbc8e4a",
-    "url": "/eth-berlin-location-recovery/static/js/main.ca15ff67.chunk.js"
+    "revision": "8f4af8fa8dc301bb71a7",
+    "url": "/eth-berlin-location-recovery/static/js/main.364d2dcc.chunk.js"
   },
   {
     "revision": "d29f50d3bc1edabae962",
