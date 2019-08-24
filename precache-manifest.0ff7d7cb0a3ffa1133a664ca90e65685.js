@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "494395d3c9a82faa5e397e64c085a68b",
+    "revision": "40a42570ee97b75ab962a177fc4ef69c",
     "url": "/eth-berlin-location-recovery/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/eth-berlin-location-recovery/static/css/2.266e55a5.chunk.css"
   },
   {
-    "revision": "35f2a886df95c367dd96",
+    "revision": "9221a126907c0dd73d2d",
     "url": "/eth-berlin-location-recovery/static/css/main.25b2f1b8.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/eth-berlin-location-recovery/static/js/2.8d1aae4d.chunk.js"
   },
   {
-    "revision": "35f2a886df95c367dd96",
-    "url": "/eth-berlin-location-recovery/static/js/main.d8836258.chunk.js"
+    "revision": "9221a126907c0dd73d2d",
+    "url": "/eth-berlin-location-recovery/static/js/main.054404c2.chunk.js"
   },
   {
     "revision": "d29f50d3bc1edabae962",
