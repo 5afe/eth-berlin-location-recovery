@@ -108,7 +108,7 @@ class RecoveryViewModel(
                     return@launch
                 }
                 val hashedLocations = locations.map { Sha3Utils.keccak(it.toByteArray()).toNoPrefixHexString() }.sorted()
-                val privateKey = KeyPair.fromPrivate(Sha3Utils.keccak(hashedLocations.joinToString().hexToByteArray()))
+                val privateKey = KeyPair.fromPrivate(Sha3Utils.keccak(hashedLocations.joinToString(separator = "").hexToByteArray()))
                 val recoverer = Solidity.Address(privateKey.address.asBigInteger())
                 val module = GnosisSafe.GetModules.decode(
                     sessionRepository.sendRequestAsync(

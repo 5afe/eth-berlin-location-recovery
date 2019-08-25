@@ -278,7 +278,7 @@ class MainViewModel(
             val locations = currentState.selectedLocations
             if (locations.size != REQUIRED_LOCATIONS) throw IllegalStateException("Incorrect number of locations")
             val hashedLocations = locations.map { Sha3Utils.keccak(it.geoHash.toByteArray()).toNoPrefixHexString() }.sorted()
-            val privateKey = KeyPair.fromPrivate(Sha3Utils.keccak(hashedLocations.joinToString().hexToByteArray()))
+            val privateKey = KeyPair.fromPrivate(Sha3Utils.keccak(hashedLocations.joinToString(separator = "").hexToByteArray()))
             val result = sessionRepository.sendRequestAsync(
                 "gs_enableSimpleRecovery",
                 listOf(
