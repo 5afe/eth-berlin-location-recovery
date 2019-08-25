@@ -11,8 +11,9 @@ android {
         applicationId "io.gnosis.location_recovery"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 42
+        versionName "ethberlinzwei"
+        project.ext.set("archivesBaseName", String.format("mapcovery-%s", defaultConfig.versionCode))
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

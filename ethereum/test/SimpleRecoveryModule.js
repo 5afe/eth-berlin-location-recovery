@@ -121,9 +121,8 @@ contract('SimpleRecoveryModule', function(accounts) {
 
         let owners = await gnosisSafe.getOwners()
         await recoveryModule.triggerAndExecuteRecoveryWithoutDelay("0x" + signature.r.toString("hex"), "0x" + signature.s.toString("hex"), signature.v, newOwners)
-        assert.ok(await recoveryModule.recoveryStartTime.call() > 0)
-        assert.equal(await recoveryModule.recoveryOwners.call(0), lw.accounts[4])
-        assert.equal(await recoveryModule.recoveryOwners.call(1), lw.accounts[5])
+        assert.equal(await recoveryModule.nonce.call(), 1)
+        assert.equal(await recoveryModule.recoveryStartTime.call(), 0)
         assert.equal(await gnosisSafe.getThreshold(), 2)
         owners.unshift(lw.accounts[5], lw.accounts[4])
         assert.deepEqual(await gnosisSafe.getOwners(), owners)

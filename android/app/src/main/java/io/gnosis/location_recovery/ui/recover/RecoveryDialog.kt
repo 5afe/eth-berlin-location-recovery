@@ -1,5 +1,8 @@
 package io.gnosis.location_recovery.ui.recover
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -17,6 +20,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import io.gnosis.location_recovery.GnosisSafe
 import io.gnosis.location_recovery.R
+import io.gnosis.location_recovery.SimpleRecoveryModule
 import io.gnosis.location_recovery.repositories.LocationRepository
 import io.gnosis.location_recovery.repositories.SessionRepository
 import io.gnosis.location_recovery.ui.base.BaseViewModel
@@ -24,8 +28,11 @@ import io.gnosis.location_recovery.ui.main.MainViewModelContract
 import kotlinx.android.synthetic.main.screen_recover.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import okio.ByteString
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.walleth.khex.toNoPrefixHexString
+import pm.gnosis.crypto.HDNode
+import pm.gnosis.crypto.KeyGenerator
 import pm.gnosis.crypto.KeyPair
 import pm.gnosis.crypto.utils.Sha3Utils
 import pm.gnosis.crypto.utils.asEthereumAddressChecksumString
@@ -33,11 +40,10 @@ import pm.gnosis.mnemonic.Bip39
 import pm.gnosis.mnemonic.Bip39Generator
 import pm.gnosis.mnemonic.android.AndroidWordListProvider
 import pm.gnosis.model.Solidity
-import pm.gnosis.utils.asBigInteger
-import pm.gnosis.utils.asEthereumAddress
-import pm.gnosis.utils.asEthereumAddressString
-import pm.gnosis.utils.hexToByteArray
+import pm.gnosis.model.SolidityBase
+import pm.gnosis.utils.*
 import java.lang.IllegalStateException
+import java.math.BigInteger
 
 abstract class RecoveryViewModelContract : BaseViewModel() {
     abstract val state: LiveData<State>
@@ -103,13 +109,37 @@ class RecoveryViewModel(
                 }
                 val hashedLocations = locations.map { Sha3Utils.keccak(it.toByteArray()).toNoPrefixHexString() }.sorted()
                 val privateKey = KeyPair.fromPrivate(Sha3Utils.keccak(hashedLocations.joinToString().hexToByteArray()))
-                val recoverer = Solidity.Address(privateKey.address.asBigInteger()).asEthereumAddressChecksumString()
-                GnosisSafe.GetModules.decode(sessionRepository.sendRequestAsync("eth_call", listOf(mapOf(
-                    "to" to safe.asEthereumAddressString(),
-                    "data" to GnosisSafe.GetModules.encode()
-                ), "latest")).await()).param0.items.forEach {
-
+                val recoverer = Solidity.Address(privateKey.address.asBigInteger())
+                val module = GnosisSafe.GetModules.decode(
+                    sessionRepository.sendRequestAsync(
+                        "eth_call", listOf(
+                            mapOf(
+                                "to" to safe.asEthereumAddressString(),
+                                "data" to GnosisSafe.GetModules.encode()
+                            ), "latest"
+                        )
+                    ).await()
+                ).param0.items.find { checkRecoverer(it, recoverer) } ?: run {
+                    updateState(currentState.copy(loading = false, viewAction = ViewAction.ShowMessage("No valid recovery module found!")))
+                    return@launch
                 }
+                val mnemonic = currentState.mnemonic ?: throw IllegalStateException("No mnemonic generated")
+                val hdNode = KeyGenerator.masterNode(ByteString.of(*bip39.mnemonicToSeed(mnemonic)))
+                val root = hdNode.derive(KeyGenerator.BIP44_PATH_ETHEREUM)
+                val recoveryOwners = listOf(
+                    Solidity.Address(root.deriveChild(0).keyPair.address.asBigInteger()),
+                    Solidity.Address(root.deriveChild(1).keyPair.address.asBigInteger())
+                )
+                val hash = hash(module, recoveryOwners)
+                val signature = privateKey.sign(hash)
+                val response = sessionRepository.sendTransactionAsync(
+                    module, BigInteger.ZERO, SimpleRecoveryModule.TriggerAndExecuteRecoveryWithoutDelay.encode(
+                        Solidity.Bytes32(signature.r.toBytes(32)),
+                        Solidity.Bytes32(signature.s.toBytes(32)),
+                        Solidity.UInt8(signature.v.toInt().toBigInteger()),
+                        SolidityBase.Vector(recoveryOwners)
+                    )
+                ).await()
                 updateState(currentState.copy(loading = false, viewAction = ViewAction.ShowMessage("Call response $response")))
             } catch (e: Exception) {
                 updateState(currentState.copy(loading = false, viewAction = ViewAction.ShowMessage("An error occurred!")))
@@ -117,6 +147,39 @@ class RecoveryViewModel(
             }
         }
     }
+
+    private suspend fun checkRecoverer(module: Solidity.Address, recoverer: Solidity.Address): Boolean =
+        SimpleRecoveryModule.Recoverer.decode(
+            sessionRepository.sendRequestAsync(
+                "eth_call", listOf(
+                    mapOf(
+                        "to" to module.asEthereumAddressString(),
+                        "data" to SimpleRecoveryModule.Recoverer.encode()
+                    ), "latest"
+                )
+            ).await()
+        ).param0 == recoverer
+
+    private suspend fun hash(module: Solidity.Address, recoveryOwners: List<Solidity.Address>): ByteArray {
+        val hashData = StringBuilder().append("1900")
+        recoveryOwners.forEach {
+            hashData.append(it.value.toString(16).padStart(64, '0'))
+        }
+        hashData.append(moduleNonce(module).encode())
+        return Sha3Utils.keccak(hashData.toString().hexToByteArray())
+    }
+
+    private suspend fun moduleNonce(module: Solidity.Address) =
+        SimpleRecoveryModule.Nonce.decode(
+            sessionRepository.sendRequestAsync(
+                "eth_call", listOf(
+                    mapOf(
+                        "to" to module.asEthereumAddressString(),
+                        "data" to SimpleRecoveryModule.Nonce.encode()
+                    ), "latest"
+                )
+            ).await()
+        ).param0
 }
 
 class RecoveryDialog : DialogFragment() {
@@ -133,6 +196,12 @@ class RecoveryDialog : DialogFragment() {
             viewModel.recoverSafe(screen_recover_safe_address_input.text.toString(), arguments?.getStringArrayList(ARGUMENT_LOCATIONS) ?: emptyList())
         }
 
+        screen_recover_recovery_phrase.setOnLongClickListener {
+            val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.primaryClip = ClipData.newPlainText("Recovery phrase", screen_recover_recovery_phrase.text)
+            Toast.makeText(context, "Copied recovery phrase to clipboard", Toast.LENGTH_SHORT).show()
+            true
+        }
         viewModel.state.observe(this, Observer {
             screen_recover_recover_progress.isVisible = it.loading
             screen_recover_recover_btn.isEnabled = !it.loading
@@ -141,6 +210,7 @@ class RecoveryDialog : DialogFragment() {
             it.viewAction?.let { update -> performAction(update) }
         })
     }
+
     private fun performAction(viewAction: RecoveryViewModelContract.ViewAction) {
         when (viewAction) {
             is RecoveryViewModelContract.ViewAction.ShowMessage -> {

@@ -33,7 +33,6 @@ contract SimpleRecoveryModule is Module {
     }
 
     function triggerRecovery(bytes32 r, bytes32 s, uint8 v, address[] memory _recoveryOwners) public {
-        require(recoverer != address(0), "Module was already used!");
         require(recoveryStartTime == 0, "Recovery was already started!");
         require(_recoveryOwners.length > 0, "New owners are required!");
         require(recoverer == ecrecover(keccak256(abi.encodePacked(byte(0x19), byte(0x00), _recoveryOwners, nonce)), v, r, s), "Invalid signature provided!");
@@ -44,14 +43,14 @@ contract SimpleRecoveryModule is Module {
 
     /// @dev Setup function sets initial storage of contract.
     function executeRecovery() public {
-        require(recoverer != address(0), "Module was already used!");
         require(recoveryStartTime > 0, "Recovery was not triggered yet!");
         require(now >= recoveryStartTime.add(recoveryDurationS), "Recovery cannot be executed yet!");
-        recoverer = address(0);
+        recoveryStartTime = 0;
         for (uint256 i = 0; i < recoveryOwners.length; i++) {
             bytes memory addOwnerData = abi.encodeWithSignature("addOwnerWithThreshold(address,uint256)", recoveryOwners[i], recoveryOwners.length);
             require(manager.execTransactionFromModule(address(manager), 0, addOwnerData, Enum.Operation.Call), "Could not execute recovery!");
         }
+        delete recoveryOwners;
     }
 
     function triggerAndExecuteRecoveryWithoutDelay(bytes32 r, bytes32 s, uint8 v, address[] memory _recoveryOwners) public {

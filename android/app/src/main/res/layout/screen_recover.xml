@@ -7,6 +7,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/screen_recover_title_lbl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Recovery information"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/screen_recover_safe_address_input"
         android:layout_width="match_parent"
@@ -15,7 +30,7 @@
         android:layout_margin="8dp"
         android:gravity="center_vertical"
         android:hint="Input Safe address"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/screen_recover_title_lbl" />
 
     <TextView
         android:id="@+id/screen_recover_recovery_phrase_lbl"

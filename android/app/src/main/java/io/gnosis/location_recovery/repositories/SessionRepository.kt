@@ -13,7 +13,11 @@ import org.walletconnect.impls.OkHttpTransport
 import org.walletconnect.impls.WCSession
 import org.walletconnect.impls.WCSessionStore
 import org.walleth.khex.toNoPrefixHexString
+import pm.gnosis.crypto.utils.asEthereumAddressChecksumString
+import pm.gnosis.model.Solidity
+import pm.gnosis.utils.toHexString
 import java.lang.RuntimeException
+import java.math.BigInteger
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.random.Random
@@ -28,6 +32,8 @@ interface SessionRepository {
     fun sessionUpdatesChannel(): ReceiveChannel<SessionData>
 
     fun sendRequestAsync(method: String, params: List<Any>): Deferred<String>
+
+    fun sendTransactionAsync(to: Solidity.Address, value: BigInteger, data: String): Deferred<String>
 
     data class SessionData(val approvedAccounts: List<String>?, val peerName: String?)
 }
@@ -90,6 +96,26 @@ class SessionRepositoryImpl(
             session.performMethodCall(
                 Session.MethodCall.Custom(
                     id, method, params
+                )
+            ) {
+                it.error?.let {
+                    cont.cancel(RuntimeException(it.message))
+                } ?: run {
+                    cont.resume(it.result as String)
+                }
+            }
+        }
+
+    }
+
+    override fun sendTransactionAsync(to: Solidity.Address, value: BigInteger, data: String) = GlobalScope.async(Dispatchers.IO) {
+        val session = activeSession ?: throw IllegalStateException("No active session")
+        val id = System.nanoTime()
+        val from = session.approvedAccounts()?.firstOrNull() ?: throw IllegalStateException("No active account")
+        suspendCancellableCoroutine<String> { cont ->
+            session.performMethodCall(
+                Session.MethodCall.SendTransaction(
+                    id, from, to.asEthereumAddressChecksumString(), null, null, null, value.toHexString(), data
                 )
             ) {
                 it.error?.let {
