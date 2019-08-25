@@ -1,27 +1,18 @@
 import React from 'react';
-// import logo from './logo.svg';
 import './App.css';
-import Container from "react-bootstrap/Container";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Row from 'react-bootstrap/Row';
-import Header from './Header'
-import Home from './Home'
-import Recover from './Recover'
-import Enable from './Enable'
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Recover from './routes/recover'
+import Home from './routes/home'
+import {
+  HOME_URL,
+  RECOVER_URL
+} from './routes/routes'
 
 function App() {
   return (
-    <Router>        
-      <Container fluid={true}>         
-        <Row>            
-          <Header/>         
-        </Row>         
-        <Row>           
-          <Route exact path="/" component={Home}/>   
-          <Route path="/enable" component={Enable}/>     
-          <Route path="/recover" component={Recover}/>     
-        </Row>       
-      </Container>      
+    <Router basename={process.env.PUBLIC_URL}>        
+      <Route exact path={HOME_URL} component={Home} /> 
+      <Route path={RECOVER_URL} component={Recover}/>
     </Router>
   );
 }
