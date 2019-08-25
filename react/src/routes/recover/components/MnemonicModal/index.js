@@ -13,6 +13,7 @@ const MnemonicModal = ({ safeAddress, locations }) => {
   const MNEMONIC = 'mnemonic'
   const QRCODES = 'qrcodes'
   const FINISHED = 'finished'
+  const CLOSE = 'close'
   
   const [mnemonic, setMnemonic] = useState(Bip39.generateMnemonic())
   const [state, setState] = useState(MNEMONIC)
@@ -25,6 +26,8 @@ const MnemonicModal = ({ safeAddress, locations }) => {
       setState(QRCODES)
     } else if (state === QRCODES) {
       setState(FINISHED)
+    } else if (state === FINISHED) {
+      setState(CLOSE)
     }
   }
 
@@ -60,7 +63,7 @@ const MnemonicModal = ({ safeAddress, locations }) => {
     }
   }
 
-  if (state === FINISHED) {
+  if (state === CLOSE) {
     return <Redirect to={HOME_URL} />
   }
   return (
@@ -79,7 +82,7 @@ const MnemonicModal = ({ safeAddress, locations }) => {
             </div>
           </React.Fragment>
         )}
-        {state === QRCODES && (
+        {(state === QRCODES || state === FINISHED) && (
           <div className={styles.qrCodes}>
             <p>Scan the Safe address:</p>
             <div ref={safeAddressQrCode} className={styles.qrCode}></div>
@@ -99,7 +102,11 @@ const MnemonicModal = ({ safeAddress, locations }) => {
             Recover Wallet
           </button>
         )}
-        
+        {state === FINISHED && (
+          <button onClick={nextState} className={styles.button}>
+            Finish
+          </button>
+        )}
       </div>
     </div>
   )
