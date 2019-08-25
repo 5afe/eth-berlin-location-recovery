@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/eth-berlin-location-recovery/precache-manifest.6cb20a476c70f914835f00da21c99047.js"
+  "/eth-berlin-location-recovery/precache-manifest.6ad4b54250719b5b9197c5fc2f0de9d6.js"
 );
 
 self.addEventListener('message', (event) => {
