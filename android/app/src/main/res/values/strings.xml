@@ -2,4 +2,5 @@
     <string name="app_name">Mapcovery</string>
     <string name="x_selected_locations">You have selected %1$d of %2$d locations!</string>
     <string name="select_location">Select a location</string>
+    <string name="app_description">Use your personal points of interest to setup recovery for your Gnosis Safe</string>
 </resources>

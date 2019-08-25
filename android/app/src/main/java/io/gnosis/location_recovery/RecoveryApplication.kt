@@ -60,7 +60,7 @@ class RecoveryApplication : Application() {
     }
 
     private val repositoryModule = module {
-        single<SessionRepository> { SessionRepositoryImpl(get(), get(), get()) }
+        single<SessionRepository> { SessionRepositoryImpl(get(), get(), get(), get()) }
         single<LocationRepository> { FoamLocationRepository(get()) }
     }
 

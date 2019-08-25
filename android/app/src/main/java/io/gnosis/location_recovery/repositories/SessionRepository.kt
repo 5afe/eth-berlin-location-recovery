@@ -1,7 +1,9 @@
 package io.gnosis.location_recovery.repositories
 
+import android.content.Context
 import android.util.Log
 import com.squareup.moshi.Moshi
+import io.gnosis.location_recovery.R
 import io.gnosis.location_recovery.bridge.BridgeServer
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -39,6 +41,7 @@ interface SessionRepository {
 }
 
 class SessionRepositoryImpl(
+    private val context: Context,
     private val networkClient: OkHttpClient,
     private val moshi: Moshi,
     private val sessionStore: WCSessionStore
@@ -134,7 +137,11 @@ class SessionRepositoryImpl(
             MoshiPayloadAdapter(moshi),
             sessionStore,
             OkHttpTransport.Builder(networkClient, moshi),
-            Session.PeerMeta(name = "Example App")
+            Session.PeerMeta(
+                name = context.getString(R.string.app_name),
+                description = context.getString(R.string.app_description),
+                icons = listOf("https://raw.githubusercontent.com/gnosis/eth-berlin-location-recovery/master/assets/logo_mapcovery.png")
+            )
         )
         session.addCallback(object : Session.Callback {
             override fun handleMethodCall(call: Session.MethodCall) {}

@@ -19,6 +19,14 @@
             app:constraint_referenced_ids="screen_main_account_address_img,screen_main_account_name_lbl,screen_main_account_address_lbl,screen_main_disconnect_btn,screen_main_map_view"
             tools:visibility="visible" />
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/screen_main_connect_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="screen_main_connect_btn,screen_main_intro_lbl,screen_main_app_img,screen_main_contributors_lbl"
+            tools:visibility="visible" />
+
         <pm.gnosis.blockies.BlockiesImageView
             android:id="@+id/screen_main_account_address_img"
             android:layout_width="40dp"
@@ -63,11 +71,38 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/screen_main_account_address_img" />
 
+        <ImageView
+            android:id="@+id/screen_main_app_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mapcovery"
+            app:layout_constraintBottom_toTopOf="@+id/screen_main_intro_lbl"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/screen_main_intro_lbl"
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:gravity="center"
+            android:text="@string/app_description"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toTopOf="@+id/screen_main_connect_btn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/screen_main_app_img" />
+
         <Button
             android:id="@+id/screen_main_connect_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorPrimary"
+            android:layout_marginTop="16dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:text="Connect to a wallet"
@@ -75,7 +110,23 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/screen_main_intro_lbl" />
+
+        <TextView
+            android:id="@+id/screen_main_contributors_lbl"
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:gravity="center"
+            android:text="\@germartinez\n\@lukasschor\n\@rmeissner\n\@tschubotz"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/screen_main_connect_btn" />
 
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/screen_main_map_view"

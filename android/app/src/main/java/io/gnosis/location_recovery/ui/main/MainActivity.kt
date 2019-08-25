@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.screen_main)
 
-        screen_main_connect_btn.isVisible = false
+        screen_main_connect_group.isVisible = false
         screen_main_connect_btn.setOnClickListener {
             viewModel.performAction(MainViewModelContract.Action.StartSession)
         }
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                 screen_main_account_address_lbl.text = null
                 screen_main_account_name_lbl.text = "Waiting for client information"
             }
-            screen_main_connect_btn.isVisible = !it.sessionActive
+            screen_main_connect_group.isVisible = !it.sessionActive
 
             it.viewAction?.let { update -> performAction(update) }
 
