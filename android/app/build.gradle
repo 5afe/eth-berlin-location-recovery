@@ -11,8 +11,9 @@ android {
         applicationId "io.gnosis.location_recovery"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 42
+        versionName "ethberlinzwei"
+        project.ext.set("archivesBaseName", String.format("mapcovery-%s", defaultConfig.versionCode))
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -48,8 +49,11 @@ dependencies {
     implementation "com.github.gnosis.svalinn-kotlin:crypto:$versions.svalinn"
     implementation "com.github.gnosis.svalinn-kotlin:models:$versions.svalinn"
     implementation "com.github.gnosis.svalinn-kotlin:utils:$versions.svalinn"
+    implementation "com.github.gnosis.svalinn-kotlin:mnemonic:$versions.svalinn"
+    implementation "com.github.gnosis.svalinn-kotlin:mnemonic-android:$versions.svalinn"
 
     implementation "com.github.gnosis.bivrost-kotlin:bivrost-solidity-types:$versions.bivrost"
+    implementation "com.github.gnosis.svalinn-kotlin:crypto:$versions.svalinn"
 
     implementation 'com.github.drfonfon:android-geohash:0.22'
 

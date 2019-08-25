@@ -6,8 +6,6 @@ import "@gnosis.pm/safe-contracts/contracts/base/Module.sol";
 import "@gnosis.pm/safe-contracts/contracts/common/Enum.sol";
 import "./external/SafeMath.sol";
 
-/// @title Recurring Transfer Module - Allows an owner to create transfers that can be executed by an owner or delegate on a recurring basis
-/// @author Grant Wuerker - <gwuerker@gmail.com>
 contract KeccakRecoveryModule is Module {
 
     using SafeMath for uint256;

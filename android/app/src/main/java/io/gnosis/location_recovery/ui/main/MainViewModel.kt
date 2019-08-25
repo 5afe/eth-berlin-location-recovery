@@ -14,12 +14,13 @@ import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.walleth.khex.toNoPrefixHexString
+import pm.gnosis.crypto.KeyPair
 import pm.gnosis.crypto.utils.Sha3Utils
 import pm.gnosis.crypto.utils.asEthereumAddressChecksumString
 import pm.gnosis.model.Solidity
+import pm.gnosis.utils.asBigInteger
 import pm.gnosis.utils.asEthereumAddress
-import pm.gnosis.utils.asEthereumAddressString
-import pm.gnosis.utils.toHex
+import pm.gnosis.utils.hexToByteArray
 import java.util.*
 
 abstract class MainViewModelContract : BaseViewModel() {
@@ -277,11 +278,12 @@ class MainViewModel(
             val locations = currentState.selectedLocations
             if (locations.size != REQUIRED_LOCATIONS) throw IllegalStateException("Incorrect number of locations")
             val hashedLocations = locations.map { Sha3Utils.keccak(it.geoHash.toByteArray()).toNoPrefixHexString() }.sorted()
+            val privateKey = KeyPair.fromPrivate(Sha3Utils.keccak(hashedLocations.joinToString().hexToByteArray()))
             val result = sessionRepository.sendRequestAsync(
-                "gs_enableLocationRecovery",
+                "gs_enableSimpleRecovery",
                 listOf(
-                    account.address.asEthereumAddressString(),
-                    hashedLocations,
+                    account.address.asEthereumAddressChecksumString(),
+                    Solidity.Address(privateKey.address.asBigInteger()).asEthereumAddressChecksumString(),
                     0L
                 )
             ).await()
