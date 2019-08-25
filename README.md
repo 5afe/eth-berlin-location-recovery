@@ -6,6 +6,7 @@ Mapcovery
 - This was a hack for [ETHBerlinZwei](https://ethberlinzwei.com).
 - Details can be found in [this overview presentation.](https://docs.google.com/presentation/d/17jVwLdRKOjDNAMzXtJShzpFil7H79M_7-JSFg7DZxJE/)
 - Details on [devpost](https://devpost.com/software/mapcovery)
+- Screencast on [YouTube](https://youtu.be/WSnmM0HCFg0)
 
 ## Problem: Key Management
 
@@ -41,7 +42,7 @@ _Prerequisite: You need a smart contract wallet ([Gnosis Safe](https://safe.gnos
 
 - We wrote a module for the Gnosis Safe smart contract in Solidity.
 - There are 2 use cases: (1) Set up mapcovery and (2) perform mapcovery to recover your wallet.
-- We wrote a webapp and an Android app to allow users to set up mapcovery.
+- We wrote a webapp and an Android app to allow users to set up mapcovery and also to perform the actual recovery.
 
 ## Challenges we ran into
 
