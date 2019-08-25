@@ -38,8 +38,10 @@ const Recover = () => {
 
   return (
     <div className={styles.recover}>
-      <h3>Recover</h3>
-      <p>Restore your Gnosis Safe by entering your Gnosis Safe address.</p>
+      <h1>Recover</h1>
+      <div className={styles.title}>
+        Restore your Gnosis Safe by entering your Gnosis Safe address.
+      </div>
       {/* <Form
         onSubmit={submit}
         render={(handleSubmit) => (
@@ -53,6 +55,8 @@ const Recover = () => {
         <input
           type="text"
           onChange={updateSafeAddress}
+          className={styles.textInput}
+          placeholder="0x..."
         />
       </form>
     </div>
