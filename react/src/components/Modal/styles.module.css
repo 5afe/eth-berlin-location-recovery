@@ -1,0 +1,25 @@
+.background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(247, 245, 245, 0.9);
+}
+
+.visible > .modal {
+  width: 600px;
+  min-height: 200px;
+  margin: 100px auto;
+  background: #fff;
+  box-shadow: 1px 2px 10px 0 rgba(0, 0, 0, 0.16);
+  border-radius: 25px;
+}
+
+.visible {
+  display: block;
+}
+
+.notVisible {
+  display: none;
+}

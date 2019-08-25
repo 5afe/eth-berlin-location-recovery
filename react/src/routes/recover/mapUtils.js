@@ -1,6 +1,5 @@
 import mapboxgl from 'mapbox-gl'
 import Geohash from 'latlon-geohash'
-import { ScatterplotLayer } from 'deck.gl'
 
 let map
 const size = 100
@@ -22,7 +21,6 @@ const pulsingDot = {
     var t = (performance.now() % duration) / duration;
     
     var radius = size / 2 * 0.3;
-    var outerRadius = size / 2 * 0.7 * t + radius;
     var context = this.context;
     
     // draw inner circle
@@ -48,25 +46,6 @@ const BOUNDING_BOX = [
   [12, 50],
   [14, 54]
 ]
-
-const FOAM_PENDING_COLOR = [46, 124, 230]
-const FOAM_VERIFIED_COLOR = [38, 171, 95]
-const FOAM_CHALLENGED_COLOR = [244, 128, 104]
-const FOAM_REMOVED_COLOR = [255, 0, 0]
-
-const getCenterPoint = (bounding_box) => (
-  [(bounding_box[0][0] + bounding_box[1][0]) / 2, (bounding_box[0][1] + bounding_box[1][1]) / 2]
-)
-
-const getPointColor = (state) => {
-  if (state && state.status && state.status.type) {
-    if (state.status.type === "applied") { return FOAM_PENDING_COLOR }
-    else if (state.status.type === "listing") { return FOAM_VERIFIED_COLOR }
-    else if (state.status.type === "challenged") { return FOAM_CHALLENGED_COLOR }
-  } else {
-    return FOAM_REMOVED_COLOR
-  }
-}
 
 const getPointCoords = (geohash) => {
   const coords = Geohash.decode(geohash)
@@ -105,7 +84,8 @@ const searchPoints = async () => {
             "coordinates": getPointCoords(p.geohash),
           },
           "properties": {
-            "description": p.name
+            "description": p.name,
+            "geohash": p.geohash
           },
           "data": {
             "geohash": p.geohash,
@@ -145,7 +125,7 @@ export const setupMap = async (element) => {
       center: [13.363, 52.514],
       container: element,
       style: 'mapbox://styles/mapbox/dark-v10',
-      zoom: 13,
+      zoom: 12,
       maxZoom: 16
     })
 
@@ -158,11 +138,11 @@ export const setupMap = async (element) => {
     let popup
 
     map.on('click', 'points', (e) => {
-      const coordinates = e.features[0].geometry.coordinates.slice()
       const description = e.features[0].properties.description
+      const geohash = e.features[0].properties.geohash
 
       // MUST USE REDUX HERE INSTEAD OF WINDOW, HAD NO TIME DURING HACKATHON
-      window.point = description
+      window.point = { description, geohash }
     })
   
     map.on('mouseenter', 'points', (e) => {

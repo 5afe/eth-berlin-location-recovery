@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { setupMap } from './mapUtils'
+import Modal from '../../components/Modal'
+import MnemonicModal from './components/MnemonicModal'
+import greenEarth from '../../assets/green_earth.png'
+import Blockie from '../../components/Blockie'
 import styles from './styles.module.css'
 
 const Recover = (props) => {
   const [locations, setLocations] = useState([])
+  const [showMnemonicModal, setShowMnemonicModal] = useState(false)
 
   let listener
   const mapRef = React.createRef()
@@ -11,44 +16,66 @@ const Recover = (props) => {
   
   useEffect(() => {
     startListener()
-    const map = setupMap(mapRef.current)
+    setupMap(mapRef.current)
 
     return () => clearInterval(listener)
   }, [])
 
   const startListener = () => {
-    // MUST USE REDUX HERE INSTEAD OF WINDOW, HAD NO TIME DURING HACKATHON
+    // SHOULD USE REDUX HERE INSTEAD OF WINDOW
     listener = setInterval(() => {
-      if (window.point && window.point != '') {
+      if (window.point) {
         setLocations(oldLocations => [...oldLocations, window.point])
-        window.point = ''
+        delete window.point
       }
     }, 500);
   }
 
+  const toggleMnemonicModal = () => {
+    setShowMnemonicModal(!showMnemonicModal)
+  }
+
   return (
-    <div className={styles.recover}>
-      <div className={styles.recoverPanel}>
-        <h1>Confirm recovery locations</h1>
-        <p>Identify your five locations to recover your Gnosis Safe below.</p>
-        <p>{safeAddress}</p>
-        <div>
-          {locations.map(l => (
-            <p key={l}>{l}</p>
-          ))}
+    <React.Fragment>
+      <div className={styles.recover}>
+        <div className={styles.recoverPanel}>
+          <h2>Confirm recovery locations</h2>
+          <p>Identify your five locations to recover your Gnosis Safe below.</p>
+          <div className={styles.wrapper}>
+            <div className={styles.header}>
+              {/*<Blockie address={safeAddress} diameter={24} />*/}
+              <div>{safeAddress}</div>
+            </div>
+            <div className={styles.content}>
+              {locations.map(l => (
+                <div className={styles.location} key={l.geohash}>
+                  <img src={greenEarth} className={styles.greenHearth} />
+                  {l.description}
+                </div>
+              ))}
+            </div>
+            <div className={styles.footer}>
+              <button
+                disabled={locations.length < 0}
+                onClick={toggleMnemonicModal}
+                className={styles.button}
+              >
+                Recover Wallet
+              </button>
+            </div>
+          </div>
         </div>
-        <div>
-          {locations.length >= 5 && (
-            <button>
-              Recover
-            </button>
-          )}
+        <div className={styles.mapWrapper}>
+          <div ref={mapRef}></div>
         </div>
       </div>
-      <div className={styles.mapWrapper}>
-        <div ref={mapRef}></div>
-      </div>
-    </div>
+      <Modal visible={showMnemonicModal}>
+        <MnemonicModal
+          locations={locations}
+          safeAddress={safeAddress}
+        />
+      </Modal>
+    </React.Fragment>
   )
 }
 
