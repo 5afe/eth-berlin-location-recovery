@@ -41,7 +41,7 @@
     "ganache-cli": "6.1.7",
     "random-buffer": "*",
     "run-with-testrpc": "0.3.0",
-    "solidity-coverage": "^0.4.15",
+    "solidity-coverage": "^0.8.2",
     "truffle": "4.1.15",
     "web3": "^0.20.6",
     "solium": "^1.2.1"
